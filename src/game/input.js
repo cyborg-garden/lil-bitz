@@ -12,6 +12,10 @@
  */
 export function makeInput(target = window) {
   const held = new Set();
+  // Written by the touch controls (game/touch.js); read alongside the keys.
+  // `held` on the button reads as the collect key being down, so held acts
+  // need no separate touch path.
+  const touch = { x: 0, z: 0, held: false };
   let collectQueued = false;
   let giveQueued = false;
   let cancelQueued = false;
@@ -55,17 +59,20 @@ export function makeInput(target = window) {
   target.addEventListener('pointerup', canvasUp);
   target.addEventListener('pointercancel', canvasUp);
 
+  const clamp1 = (v) => Math.max(-1, Math.min(1, v));
+
   return {
+    touch,
     /** @param {string} code */
-    isDown: (code) => held.has(code),
+    isDown: (code) => held.has(code) || (touch.held && COLLECT_KEYS.has(code)),
     get axes() {
-      let x = 0;
-      let z = 0;
+      let x = touch.x;
+      let z = touch.z;
       if (held.has('KeyW') || held.has('ArrowUp')) z -= 1;
       if (held.has('KeyS') || held.has('ArrowDown')) z += 1;
       if (held.has('KeyA') || held.has('ArrowLeft')) x -= 1;
       if (held.has('KeyD') || held.has('ArrowRight')) x += 1;
-      return { x, z };
+      return { x: clamp1(x), z: clamp1(z) };
     },
     get turn() {
       let t = 0;
@@ -107,6 +114,7 @@ export function makeInput(target = window) {
 
     /** Testing/debug hooks so the harness can press keys without a keyboard. */
     queueCollect() { collectQueued = true; },
+    queueCancel() { cancelQueued = true; },
     queueGive() { giveQueued = true; },
     queueNav(n) { navQueued += n; },
     get held() { return Array.from(held); },

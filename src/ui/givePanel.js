@@ -35,7 +35,8 @@ export function makeGivePanel(root) {
     <div id="give-panel" hidden>
       <div id="give-head"></div>
       <ul id="give-list"></ul>
-      <div id="give-foot"><span class="key">↑↓</span> choose <span class="key">E</span> give <span class="key">Esc</span> keep them</div>
+      <div id="give-foot"><span class="keys-hint"><span class="key">↑↓</span> choose <span class="key">E</span> give <span class="key">Esc</span> keep them</span><span class="touch-hint">tap an item to give it · ✕ keeps them</span></div>
+      <button id="give-close" type="button" aria-label="keep them">✕</button>
     </div>
   `);
 
@@ -44,6 +45,7 @@ export function makeGivePanel(root) {
   const list = root.querySelector('#give-list');
 
   let open = false;
+  let pickQueued = false;
   /** @type {{id: string, itemId: string, tier: number}[]} */
   let items = [];
   let cursor = 0;
@@ -57,7 +59,7 @@ export function makeGivePanel(root) {
     list.innerHTML = items.map((it, i) => {
       const def = itemDef(it.itemId);
       const meta = tierMeta(it.tier);
-      return `<li class="${i === cursor ? 'sel' : ''}">` +
+      return `<li data-i="${i}" class="${i === cursor ? 'sel' : ''}">` +
         `<span class="tier-dot" style="background:${meta.colour}"></span>` +
         `<span class="give-name">${def?.name ?? it.itemId}</span>` +
         `<span class="give-tier">${meta.name}</span></li>`;
@@ -67,9 +69,30 @@ export function makeGivePanel(root) {
     if (sel) sel.scrollIntoView({ block: 'nearest' });
   }
 
+  // Touch: tapping an item selects it and queues the give in one gesture —
+  // the tap IS the deliberate act the panel exists for. ✕ keeps them.
+  list.addEventListener('click', (e) => {
+    const li = e.target.closest('li[data-i]');
+    if (!li || !open) return;
+    cursor = Number(li.dataset.i);
+    render();
+    pickQueued = true;
+  });
+  root.querySelector('#give-close').addEventListener('click', () => {
+    open = false;
+    panel.hidden = true;
+  });
+
   return {
     get open() { return open; },
     get selected() { return items[cursor] ?? null; },
+
+    /** Consume a tapped-item give. Edge-triggered, drained like the keys. */
+    takePick() {
+      if (!pickQueued) return false;
+      pickQueued = false;
+      return true;
+    },
 
     /**
      * @param {string} name

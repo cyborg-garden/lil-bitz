@@ -1,0 +1,90 @@
+/* Touch controls. Below the give panel (z 5), above the world. The container
+   itself catches nothing; only the stick zone and the button are targets, so
+   the rest of the screen keeps drag-to-look. */
+#touch-ui {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  font-family: ui-rounded, "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+#touch-stick-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 44%;
+  height: 62%;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+#touch-stick {
+  position: absolute;
+  width: 112px;
+  height: 112px;
+  margin: -56px 0 0 -56px;
+  border-radius: 50%;
+  border: 1px solid var(--edge, rgba(43, 33, 24, 0.18));
+  background: var(--card, rgba(252, 246, 232, 0.93));
+  opacity: 0.45;
+}
+
+#touch-nub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  background: var(--ink, #2b2118);
+  opacity: 0.55;
+}
+
+#touch-act {
+  position: absolute;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(26px, env(safe-area-inset-bottom));
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 1px solid var(--edge, rgba(43, 33, 24, 0.18));
+  background: var(--card, rgba(252, 246, 232, 0.93));
+  color: var(--ink, #2b2118);
+  opacity: 0.65;
+  pointer-events: auto;
+  touch-action: none;
+  font: inherit;
+  display: grid;
+  place-items: center;
+}
+#touch-act .act-tap { font-size: 26px; }
+#touch-act .act-hold {
+  display: none;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+}
+#touch-act.holding { opacity: 0.95; }
+/* Held past the give threshold: the button says what release now means. */
+#touch-act.give-armed { background: var(--ink, #2b2118); color: var(--card, #fcf6e8); }
+#touch-act.give-armed .act-tap { display: none; }
+#touch-act.give-armed .act-hold { display: block; }
+
+/* Give panel on touch: items are tapped, the ✕ keeps them. */
+#give-close { display: none; }
+body.touch-ui-on #give-close {
+  display: block;
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 20px;
+  padding: 4px 8px;
+}
+body.touch-ui-on #give-foot .keys-hint { display: none; }
+#give-foot .touch-hint { display: none; }
+body.touch-ui-on #give-foot .touch-hint { display: inline; }

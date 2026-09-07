@@ -6,6 +6,7 @@ import './ui/title.css';
 import { makeWorld, chunkIndex, CHUNK_SIZE } from './worldgen/chunk.js';
 import { makeClock } from './game/clock.js';
 import { makeInput } from './game/input.js';
+import { makeTouchControls } from './game/touch.js';
 import { makeKete } from './game/kete.js';
 import { makeTerrainMesh, makeWater, makeFreshWater } from './render/terrainMesh.js';
 import { makeProps, makeHighlight } from './render/props.js';
@@ -246,6 +247,7 @@ const kete = makeKete();
 const input = makeInput(window);
 const hud = makeHud(document.body);
 const givePanel = makeGivePanel(document.body);
+const touchControls = makeTouchControls(input, document.body);
 const arc = makePickupArc(document.body);
 const audio = makeAudio();
 const discernment = makeDiscernment();
@@ -1220,6 +1222,7 @@ function advance(dt) {
   const pressGive = input.takeGive() && live;
   const pressCancel = input.takeCancel() && live;
   const nav = live ? input.takeNav() : (input.takeNav(), 0);
+  const panelPick = givePanel.takePick() && live; // drained every frame, like the keys
 
   const nearRecipient = nearRecipientNow();
   const panelOpen = givePanel.open;
@@ -1238,7 +1241,7 @@ function advance(dt) {
   if (panelOpen) {
     if (nav) givePanel.move(nav);
     if (pressCancel || pressGive) givePanel.hide();
-    else if (pressCollect) doGive(nearRecipient);
+    else if (pressCollect || panelPick) doGive(nearRecipient);
     // Walking away closes it, so the panel can never follow you down the beach.
     if (!nearRecipient) givePanel.hide();
   } else if (pressGive && nearRecipient) {
@@ -2151,9 +2154,16 @@ help.id = 'help';
 // The xbox50 console serves carts under /cart/ — gamepad hands, gamepad words.
 help.textContent = location.pathname.startsWith('/cart/')
   ? 'stick to walk · click to pick up · hold click to give'
-  : 'WASD to walk · drag to look · E to pick up · G to give';
+  : touchControls.active
+    ? 'left thumb to walk · drag to look · tap ◉ to pick up · hold ◉ to give'
+    : 'WASD to walk · drag to look · E to pick up · G to give';
 help.style.opacity = '0';
 document.body.appendChild(help);
+window.addEventListener('lb-touch-on', () => {
+  if (!location.pathname.startsWith('/cart/')) {
+    help.textContent = 'left thumb to walk · drag to look · tap ◉ to pick up · hold ◉ to give';
+  }
+});
 
 function beginGame(characterId) {
   setPlayerCharacter(characterId);
