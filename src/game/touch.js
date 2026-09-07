@@ -34,10 +34,10 @@ export function makeTouchControls(input, root = document.body) {
   ui.hidden = true;
   ui.innerHTML = `
     <div id="touch-stick-zone">
-      <div id="touch-stick" hidden><div id="touch-nub"></div></div>
+      <div id="touch-stick" class="resting"><div id="touch-nub"></div></div>
     </div>
-    <button id="touch-act" type="button" aria-label="pick up (hold to give)">
-      <span class="act-tap">◉</span><span class="act-hold">give</span>
+    <button id="touch-act" type="button" aria-label="take (hold to give)">
+      <span class="act-tap">◉<em>take</em></span><span class="act-hold">give</span>
     </button>
   `;
   root.appendChild(ui);
@@ -88,7 +88,12 @@ export function makeTouchControls(input, root = document.body) {
     input.touch.x = 0;
     input.touch.z = 0;
     navArmed = true;
-    stick.hidden = true;
+    // Back to its resting corner, so there is always a visible place to
+    // put a thumb — the float-to-the-thumb is a convenience, not a secret.
+    stick.classList.add('resting');
+    stick.style.left = '';
+    stick.style.top = '';
+    nub.style.transform = '';
   }
 
   zone.addEventListener('pointerdown', (e) => {
@@ -98,7 +103,7 @@ export function makeTouchControls(input, root = document.body) {
     ox = e.clientX;
     oy = e.clientY;
     try { zone.setPointerCapture(e.pointerId); } catch { /* capture is a nicety */ }
-    stick.hidden = false;
+    stick.classList.remove('resting');
     stick.style.left = `${ox}px`;
     stick.style.top = `${oy}px`;
     setVector(e);

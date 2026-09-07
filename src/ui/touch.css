@@ -27,7 +27,16 @@
   border-radius: 50%;
   border: 1px solid var(--edge, rgba(43, 33, 24, 0.18));
   background: var(--card, rgba(252, 246, 232, 0.93));
-  opacity: 0.45;
+  opacity: 0.55;
+}
+/* At rest it waits in the corner, quieter, so the thumb has a visible home. */
+#touch-stick.resting {
+  left: 84px;
+  top: auto;
+  /* Clear of the kete pill that lives in the same corner. */
+  bottom: calc(max(26px, env(safe-area-inset-bottom)) + 64px);
+  margin: 0 0 0 -56px;
+  opacity: 0.3;
 }
 
 #touch-nub {
@@ -46,8 +55,8 @@
   position: absolute;
   right: max(18px, env(safe-area-inset-right));
   bottom: max(26px, env(safe-area-inset-bottom));
-  width: 84px;
-  height: 84px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   border: 1px solid var(--edge, rgba(43, 33, 24, 0.18));
   background: var(--card, rgba(252, 246, 232, 0.93));
@@ -59,10 +68,20 @@
   display: grid;
   place-items: center;
 }
-#touch-act .act-tap { font-size: 26px; }
+#touch-act .act-tap {
+  font-size: 24px;
+  line-height: 1.05;
+  display: grid;
+  justify-items: center;
+}
+#touch-act .act-tap em {
+  font-style: normal;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
 #touch-act .act-hold {
   display: none;
-  font-size: 15px;
+  font-size: 17px;
   letter-spacing: 0.06em;
 }
 #touch-act.holding { opacity: 0.95; }

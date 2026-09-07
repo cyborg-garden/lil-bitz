@@ -102,13 +102,17 @@ const SKY = new THREE.Color('#d8cdb4');
 scene.background = SKY;
 scene.fog = new THREE.Fog(SKY, 45, 130);
 
-const camera = new THREE.PerspectiveCamera(58, 16 / 9, 0.1, 400);
+// Aspect from the real window, not an assumed 16:9: a portrait phone gets no
+// resize event on load, so a hardcoded aspect ships stretched.
+const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 400);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
   preserveDrawingBuffer: true, // required for headless capture of a paused frame
 });
-renderer.setPixelRatio(1); // fixed, so agent screenshots are a stable size
+// Capped, not native: phones report DPR 3 and pay 9x the pixels. Headless
+// capture runs at DPR 1, so agent screenshots keep their stable size.
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.appendChild(renderer.domElement);
