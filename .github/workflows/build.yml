@@ -1,0 +1,46 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+# One publisher at a time: overlapping runs force-push "built", so an older
+# run finishing late could overwrite a newer build. Newest wins, always.
+concurrency:
+  group: publish-built
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npx vite build --base ./
+
+      - name: Add meta.json to dist
+        run: cp meta.json dist/
+
+      - name: Publish dist as orphan branch "built"
+        run: |
+          cd dist
+          git init -b built
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "build: publish dist from ${GITHUB_SHA}"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" built
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

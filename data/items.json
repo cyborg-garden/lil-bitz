@@ -1,0 +1,69 @@
+{
+  "_note": "Placeholder vocabulary for milestone 1. Names and flavour are drafts for Lys to overwrite. Nothing here is code; changing a name is a JSON edit.",
+  "_namingNote": "Where a thing has a commonly-used te reo M\u0101ori name in Aotearoa, that is its name here \u2014 not the English one. p\u0101ua, heru, maro and pounamu are all already the ordinary word for the thing; \"green stone\" was the outlier and is now pounamu. Biome follows the real thing too: pounamu comes out of West Coast rivers and off beaches, not out of forest floor, so it sits in beach. It swapped places with the humming geode rather than simply moving, because resolveItem() picks uniformly among the items matching a tier+biome and leaving forest tier 4 with a single entry would have made every forest Wonder the same feather.",
+  "tiers": [
+    { "tier": 1, "name": "Bitz",     "colour": "#b9a888", "scale": 0.30 },
+    { "tier": 2, "name": "Keepers",  "colour": "#cfd8c0", "scale": 0.36 },
+    { "tier": 3, "name": "Glimmers", "colour": "#7fb6c4", "scale": 0.42 },
+    { "tier": 4, "name": "Wonders",  "colour": "#c9a3e0", "scale": 0.52 },
+    { "tier": 5, "name": "Epic Find", "colour": "#ffd36b", "scale": 0.70 },
+    { "tier": 6, "name": "Epic epic Find", "colour": "#ff8fd0", "scale": 0.86 }
+  ],
+  "_tier6Note": "Lyss splits the top of the ladder by FUNCTION, not rarity. An Epic find is 'just from another world' — a sci-fi heru, a chainmail maro. An Epic epic find 'grants you supernatural ability'. Tier 6 is therefore never rolled and never scattered: biome 'granted' matches no chunk, so the only way one exists is for a cryptid to hand it to you. That path is not built yet. The data is here so the ladder is real, and so the escalated Epic sequence has something to escalate FOR.",
+  "weights": {
+    "beach":  { "1": 45, "2": 33, "3": 17, "4": 5 },
+    "forest": { "1": 42, "2": 34, "3": 18, "4": 6 },
+    "elsewhere": { "1": 20, "2": 30, "3": 28, "4": 22 }
+  },
+  "_elsewhereWeightsNote": "Where the good stuff is: Wonders at 22 against the forest's 6. Tier 5 is NOT on this table, same as at home; elsewhere's Epics are hand-placed by worldgen/elsewhere.js and pinned, so the scheduler's promise (never on a weight table) holds in both worlds. The offer book reads this table for any object carrying biome 'elsewhere'.",
+  "items": [
+    { "id": "shell_chip",   "tier": 1, "biome": "beach",  "name": "shell chip",        "flavour": "a broken bit of something that used to be whole." },
+    { "id": "worn_pebble",  "tier": 1, "biome": "beach",  "name": "worn pebble",       "flavour": "the sea has been working on this one for a while." },
+    { "id": "dry_kelp",     "tier": 1, "biome": "beach",  "name": "dry kelp",          "flavour": "crunchy. smells like low tide." },
+    { "id": "twig",         "tier": 1, "biome": "forest", "name": "twig",              "flavour": "a twig. genuinely just a twig." },
+    { "id": "leaf_litter",  "tier": 1, "biome": "forest", "name": "leaf litter",       "flavour": "damp, and slightly warm underneath." },
+    { "id": "can_tab",      "tier": 1, "biome": "forest", "name": "can tab",           "flavour": "shiny bit of metal. someone would want this." },
+
+    { "id": "scallop",      "tier": 2, "biome": "beach",  "name": "whole scallop",     "flavour": "unbroken. that almost never happens." },
+    { "id": "sea_glass",    "tier": 2, "biome": "beach",  "name": "sea glass",         "flavour": "a bottle, once. the sea sanded the anger out of it." },
+    { "id": "cats_eye",     "tier": 2, "biome": "beach",  "name": "cat's eye",         "flavour": "the little door a sea snail closed behind itself." },
+    { "id": "pinecone",     "tier": 2, "biome": "forest", "name": "pinecone",          "flavour": "closed tight. it will open when it is ready." },
+    { "id": "quartz_chip",  "tier": 2, "biome": "forest", "name": "quartz chip",       "flavour": "white and sharp. catches the light wrong." },
+
+    { "id": "banded_agate", "tier": 3, "biome": "beach",  "name": "banded agate",      "flavour": "rings all the way through, like it kept a record." },
+    { "id": "paua_piece",   "tier": 3, "biome": "beach",  "name": "pāua piece",        "flavour": "every colour at once, depending how you hold it." },
+    { "id": "mermaids_purse","tier": 3, "biome": "beach", "name": "mermaid's purse",   "flavour": "empty. whatever was in here left some time ago." },
+    { "id": "elytron",      "tier": 3, "biome": "forest", "name": "beetle elytron",    "flavour": "one wing case, green-black, impossibly light." },
+    { "id": "resin_bead",   "tier": 3, "biome": "forest", "name": "resin bead",        "flavour": "still tacky. it will be a stone in a million years." },
+
+    { "id": "humming_geode","tier": 4, "biome": "forest", "name": "humming geode",     "flavour": "hold it near your ear. no, closer." },
+    { "id": "one_note_shell","tier": 4, "biome": "beach", "name": "one-note shell",    "flavour": "it plays exactly one note, and only outdoors." },
+    { "id": "heavy_feather","tier": 4, "biome": "forest", "name": "heavy feather",     "flavour": "weighs more than a feather has any business weighing." },
+    { "id": "pounamu",      "tier": 4, "biome": "beach",  "near": "water", "name": "pounamu", "flavour": "warm before you pick it up, not after." },
+
+    { "id": "violet_grit",  "tier": 1, "biome": "elsewhere", "name": "violet grit",      "flavour": "sand, but the wrong colour. it stays the wrong colour in your hand." },
+    { "id": "dry_ember",    "tier": 1, "biome": "elsewhere", "name": "dry ember",        "flavour": "not warm. it looks like it should be." },
+    { "id": "lit_seed",     "tier": 2, "biome": "elsewhere", "name": "lit seed",         "flavour": "there is a little light in it that does not go out when you close your hand." },
+    { "id": "star_chip",    "tier": 3, "biome": "elsewhere", "name": "star chip",        "flavour": "four points. it is not glass and it is not stone." },
+    { "id": "sunset_pebble","tier": 4, "biome": "elsewhere", "name": "sunset pebble",    "flavour": "the colour of the sky here, all the way through. it will be that colour at home too." },
+
+    { "id": "portal_shard", "tier": 5, "biome": "any",    "name": "shard of elsewhere", "flavour": "the light in it is coming from a sky you have not seen." },
+    { "id": "wrong_compass","tier": 5, "biome": "any",    "name": "wrong compass",      "flavour": "it points confidently. not at north." },
+    { "id": "sealed_tin",   "tier": 5, "biome": "any",    "name": "sealed tin",         "flavour": "something inside shifts when you turn it. it is not liquid." },
+    { "id": "scifi_heru",   "tier": 5, "biome": "any",    "name": "a heru, but not",     "flavour": "the comb is right. the material is from no tree and no bone." },
+    { "id": "chainmail_maro","tier": 5, "biome": "any",   "name": "a chainmail maro",    "flavour": "every ring closed by hand. not by any hand you know." },
+
+    { "id": "scale_that_isnt", "tier": 5, "biome": "authored", "name": "a scale that isn't", "flavour": "it is not a scale. it is very nearly a scale." },
+    { "id": "warm_stone",      "tier": 5, "biome": "authored", "name": "a stone warm on one side", "flavour": "the same side, however you put it down." },
+    { "id": "knotted_kelp",    "tier": 5, "biome": "authored", "name": "kelp in a knot",    "flavour": "a length of kelp tied in a knot no tide ties." },
+
+    { "id": "seeing_stone", "tier": 6, "biome": "granted", "name": "the sure stone",     "flavour": "heavier than it looks. it does not roll when you put it down." },
+    { "id": "carry_knot",   "tier": 6, "biome": "granted", "name": "the carrying knot",  "flavour": "a knot with no ends. you cannot find where it starts." }
+  ],
+  "_authoredNote": "biome 'authored' matches no chunk biome and no weight table, like 'granted'. These are the cryptid finds: tier 5, hand-placed within cryptidArea.radius of a site by src/worldgen/cryptids.js, pinned with offers.force, never scattered. No body parts of any cryptid as items — no hair, no scale-of-a-body, no bone, no tooth. 'a scale that isn't' is allowed only because it says it is not one.",
+  "_tier6FlavourNote": "tier-6 flavour is OBSERVATION: what it is like to hold, never who made it or what the cryptid is. Lyss's memo says an Epic epic 'grants you supernatural ability', and the first drafts promised one each — knowing the way out, carrying more — but no such mechanic exists in the game, and a player who reads 'you are sure which way is out' will test it on the spot in elsewhere. When an ability is built, its flavour can say so; until then these are placeholders that describe the thing and promise nothing.",
+
+  "_epicExamplesNote": "Both of Lyss's own Epic-find examples are now in: 'a scifi fucking heru' and 'a chainmail maro'. The maro was unresolved through milestone 4 because three transcription passes of her voice memo gave three different words; Juniper confirmed it from the memos on 2026-08-28.",
+  "_grantedNote": "biome 'granted' deliberately matches no chunk biome, so tier 6 can never be scattered into the world. See _tier6Note.",
+  "_nearNote": "An optional `near` field says an item wants a particular kind of ground. `near: \"water\"` means the beach OR a creek bed — which is where pounamu actually comes from: West Coast rivers and the beaches below them, not the forest floor. Now that the world has streams, a forest point within a few metres of one counts as a riverbed and pounamu can turn up in it. Items without `near` are unaffected and appear anywhere their biome allows."
+}

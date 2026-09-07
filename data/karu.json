@@ -1,0 +1,66 @@
+{
+  "_note": "Karu. Every number and every line for the eye lives here, so Lyss changes Karu with an edit and never a refactor. Karu has no dialogue until Lyss writes it: nothing in `lines` is speech. It is third-person narration of what Karu DOES, in the game's lowercase voice, keyed to the beats main.js plays. A sentence Karu speaks is a sentence about what Karu is, and what Karu is is hers to say.",
+  "name": "Karu",
+  "speaks": false,
+  "_linesNote": "Narration only. The HUD shows these with no speaker name. greet: the first time it is there, at the trinket maker. enterWorld: on going through the doorway together. elsewhere: on arrival. thisWay: when it starts toward the return door. home: back on the beach.",
+  "lines": {
+    "greet": "the eye turns to you. it does not blink.",
+    "enterWorld": "it goes through first.",
+    "elsewhere": "it looks at the place for a long time, then at you.",
+    "thisWay": "it drifts on. it waits when you stop.",
+    "home": "it is still with you."
+  },
+  "_lineDelayNote": "How long after a crossing lands before the arrival narration is queued: a beat for the fade to clear, shorter than a reading pace because nothing is on screen yet.",
+  "lineDelayMs": 400,
+  "_glyphNote": "A sign for an eye, not a picture of one. A ring with a dark centre and a single ink stroke, in the portal's ink colour: no almond lid, no coloured iris, no lashes. Her drawing replaces the canvas glyph; the mesh is the same size and pivot either way.",
+  "glyph": {
+    "sizeMetres": 1.0,
+    "ink": "#2b2118",
+    "ringWidth": 0.11,
+    "haloAlpha": 0.22
+  },
+  "_motionNote": "Hovers ahead on the route, never on the player. It has a goal point 3-4m ahead and drifts toward it at a capped speed, so it can fall behind on a sprint and catch up; it is NEVER teleported or pulled, and neither is the player. waits when you stop: below `stillSpeed` the goal freezes where it is, so a player who stands still sees Karu settle rather than orbit.",
+  "motion": {
+    "hoverMetres": 2.0,
+    "aheadMin": 3.0,
+    "aheadMax": 4.0,
+    "driftSpeed": 3.2,
+    "catchUpDistance": 9.0,
+    "catchUpSpeed": 6.0,
+    "stillSpeed": 0.3,
+    "bobMetres": 0.12,
+    "bobHz": 0.45,
+    "_groundClearanceNote": "Metres above the ground the glyph is never allowed below, whatever the hover says, so a slope cannot bury it.",
+    "groundClearance": 1.2,
+    "_steerNote": "The route has to be walkable. If the goal ahead is water the player cannot wade, the bearing swings off in steps of steerStepDeg, alternating sides, out to steerMaxDeg, until the goal is on ground. On the default seed the straight line from the elsewhere entry to the return door crossed a 1.6m stream and the eye hung over the pond.",
+    "steerStepDeg": 15,
+    "steerMaxDeg": 150,
+    "_steerLineNote": "A bearing is tested as a LINE from the player to the goal, sampled every steerLineStepMetres, not as a point: the stream is wadeable along most of its length, so every point down the channel passed and the eye led the player down the creek to where the next goal was walkable by a centimetre and the ground between was not. Among bearings that pass, dry ground beats wade-depth water when a dry bearing exists within preferDryWithinDeg of the route.",
+    "steerLineStepMetres": 0.5,
+    "preferDryWithinDeg": 60,
+    "_stuckNote": "A player who has come no closer to the door than stuckProgressMetres inside their best distance for stuckSec is stuck, not waiting: standing at a bar in the channel, or walking its length back and forth behind an eye that keeps finding another wadeable bearing. The steer opens to stuckSteerMaxDeg and takes dry ground anywhere on the circle, and stays open until the player stands on dry ground, so the eye leads out of the channel before it leads on.",
+    "stuckSec": 6,
+    "stuckProgressMetres": 0.75,
+    "stuckSteerMaxDeg": 180,
+    "_spawnNote": "Where the eye first appears, relative to her (the karu milestone) and relative to the player on the far side of a crossing ('it goes through first': already ahead). The only two times its position is set rather than drifted.",
+    "spawnAtHer": { "x": 2.5, "z": 5 },
+    "spawnAfterCrossing": { "x": 1, "z": -2 }
+  },
+  "_blinkNote": "Stepped, not smooth: `frames` drawn frames at `fps`, the ring closing to a line and back (3 frames is open, half, closed, half, open). The renderer draws exactly `frames` frames and the sequence is derived from the count, so this number is the number on screen. Smooth interpolation on a drawn thing reads as CG. The interval is a roll between min and max so it never becomes a metronome. The first beat (`greet`) says it does not blink, so the first blink is held back until firstBlinkDelaySec has passed.",
+  "blink": {
+    "fps": 8,
+    "frames": 3,
+    "minSec": 6,
+    "maxSec": 11,
+    "firstBlinkDelaySec": 4
+  },
+  "_lightNote": "With Karu present the return door gets a column of light so it can be seen from a distance. Drawn as a tall additive quad at the door, not a post effect: nothing load-bearing may be an effect. Karu drifts toward it; the player walks.",
+  "light": {
+    "heightMetres": 40,
+    "widthMetres": 2.4,
+    "colour": "#ffd08a",
+    "alpha": 0.8,
+    "flickerHz": 0.8
+  },
+  "_sizeNote": "1.0m, not the 0.6m first drafted. At the chase camera's 13m a 0.6m glyph was a ten-pixel ring beside the arch in the rendered frame, which is not an eye that looks at you. Same finding as the bend degrees: the number was right on paper and invisible in the frame."
+}

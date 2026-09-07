@@ -1,0 +1,357 @@
+{
+  "_note": "Every tuned number in one place. BUILD-PLAN section 5 derives these; DECISIONS.md amends the discernment payoff. Changing a number here must never require a code change.",
+  "offer": {
+    "walkSpeed": 2.2,
+    "pickupRadius": 1.8,
+    "targetOffersPerMin": 6.0
+  },
+  "scriptedOpening": {
+    "_note": "The first 12 ENCOUNTERS are authored, not rolled; a zero means roll normally. Advancing on encounter rather than on pickup keeps the HUD honest and stops a player who declines a scripted item from stalling the sequence. Epic is not in this list: it is not on any weight table, the scheduler owns it.",
+    "tiers": [
+      1,
+      1,
+      2,
+      1,
+      2,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "epicAtIndex": 12,
+    "epicMinSeconds": 150
+  },
+  "pity": {
+    "_note": "Soft pity on ticks since the last Epic. Same mean as a flat 3% roll, roughly sixteen times less variance, and no tail at all.",
+    "_kOneNote": "BUILD-PLAN listed windowStart 22->14, ramp 0.08->0.12, hardPity 34->24, and claimed that made Epics about 20% faster at full discernment. Simulated, those constants give 35%. The prose is the design intent and the numbers were wrong, so the numbers moved: the cheat is supposed to enrich the world, not cheapen the spectacle.",
+    "windowStart": [
+      22,
+      18
+    ],
+    "ramp": [
+      0.08,
+      0.105
+    ],
+    "hardPity": [
+      34,
+      28
+    ],
+    "tickGrab": 1.0,
+    "tickRefusal": 0.35,
+    "wonderSoftDry": 22,
+    "wonderHardDry": 30,
+    "wonderSoftMult": 2.0
+  },
+  "discernment": {
+    "_note": "Refuse the junk, give away the treasure. Both channels feed one hidden k.",
+    "_tasteMaxNote": "Sized from the steady state, not guessed. At 6 offers/min with ~60% low tier all refused, taste gains 3.6/min against a 120s half-life, which settles at 10.4. BUILD-PLAN's ceiling of 24 therefore capped perfect play at k=0.24 and the cheat was unreachable by design. At 12 a committed player reaches k~0.78.",
+    "tasteMax": 12.0,
+    "refusalGain": {
+      "1": 0.7,
+      "2": 1.2
+    },
+    "grabLoss": {
+      "1": -1.6,
+      "2": -0.9,
+      "3": -0.15,
+      "4": 0,
+      "5": 0
+    },
+    "_givingNote": "Rescaled with tasteMax. Giving one Wonder is most of the bar and an Epic fills it, which is the point: giving away a high-tier find is THE mechanism. It decays like everything else, so it is a burst and not a state you park in.",
+    "givingGain": {
+      "1": 0,
+      "2": 1,
+      "3": 3.5,
+      "4": 10,
+      "5": 12,
+      "6": 12
+    },
+    "exponent": 1.7,
+    "activityWindowSec": 60,
+    "activityTarget": 3.0,
+    "halfLifeSec": 120,
+    "feralGrabs": 3,
+    "feralMult": 0.25,
+    "epicSpendMult": 0.5,
+    "payoff": {
+      "1": -0.85,
+      "2": -0.45,
+      "3": 1.3,
+      "4": 3.4
+    }
+  },
+  "refusal": {
+    "_note": "Ignoring must mean seeing and declining. Clauses 2 and 4 kill sprint-past and stand-still-AFK respectively.",
+    "_seenNote": "BUILD-PLAN specified seen = within 1.8m AND inside a 60 degree cone. Those two together almost never both hold: an item you pass 1.5m to one side sits at about 31 degrees off-axis at the moment it is closest, just outside a 60 degree cone, so walking straight past things registered nothing and only 7 refusals fired in six minutes. Seen now means it was genuinely in front of you and close.",
+    "seenSeconds": 0.75,
+    "seenRadius": 4.5,
+    "seenConeDegrees": 120,
+    "abandonDistance": 6.0,
+    "afkMinTravel": 2.0,
+    "afkWindowSec": 5.0,
+    "maxTier": 2
+  },
+  "epicGates": {
+    "minSecondsBetween": 150,
+    "maxConcurrent": 1
+  },
+  "giving": {
+    "_note": "The outbound verb. Giving is the FAST channel into the same hidden k that refusing junk feeds slowly — one rule at two scales. The gains themselves live in discernment.givingGain, because it is the same number.",
+    "reachMetres": 3.2,
+    "_sacrificeNote": "DECISIONS 2026-08-27 left one thing open: does giving cost you the collection entry? Option 1, sacrifice is real, was the leaning and is what this implements. The object leaves your kete; she writes it into her ledger, so the RECORD survives and the THING does not. Flip this to false to try option 2 without a code change.",
+    "sacrificeIsReal": true,
+    "_cooldownNote": "One gift at a time, so mashing the key through the whole kete cannot fire five reactions over each other. Long enough to read her line.",
+    "reactionMs": 2600,
+    "_verbNote": "The player-facing words on the give prompt and the card, with {name} for the recipient. A recipient can carry its own givePrompt / giveHead in recipients.json; the two cryptids do, because 'give something to moana kelpī' reads as vending. A place uses leavePrompt / leaveHead instead and never these.",
+    "prompt": "give something to {name}",
+    "head": "give to {name}",
+    "headEmpty": "{name} — your kete is empty"
+  },
+  "epicSequence": {
+    "_note": "BUILD-PLAN section 6's beat sheet, as DURATIONS rather than absolute times, so the shortening ladder is a data edit. The fall is the same length in every mode except the quick one: shortening it per rung would make the object stop landing with weight, which is the one thing the whole beat is for.",
+    "_fallNote": "0.62s, not the plan's 0.80s. The plan fixes the fall at 0.80s and gravity at 14, which together DERIVE a portal mouth 4.48m in the air. Measured against this game's actual camera and terrain, that is unframeable: the chase camera puts the horizon at the very top of the screen, the ground climbs about 5m over the 17m inland where the portal sites, and the mouth ends up roughly 9.5m above a camera 3m up — off the top of the frame in every seed tested. Gravity is unchanged, so the impact still reads heavy (8.7 m/s rather than 11.2). The mouth now sits 2.69m up and the whole beat is on screen.",
+    "_settleNote": "`settle` is measured FROM IMPACT and runs UNDER the lettering, it is not appended after it. The plan's tail is 1.9 to 4.2s while the lettering holds from 1.55 to 2.97, so treating settle as sequential stretched the full beat to 4.8s. The quoted 4.2s is also measured from the portal opening, not from the start of the tell — the tell is at -0.6 to 0.0 by construction.",
+    "_ladderNote": "Progressive shortening on epicCount: #1 full, #2-3 shorter, #4-6 no dilation, #7+ quick. NEVER removed. It stops being a cutscene and stays an event.",
+    "ladder": [
+      {
+        "upTo": 1,
+        "mode": "full"
+      },
+      {
+        "upTo": 3,
+        "mode": "shorter"
+      },
+      {
+        "upTo": 6,
+        "mode": "brief"
+      },
+      {
+        "upTo": 9999,
+        "mode": "quick"
+      }
+    ],
+    "modes": {
+      "full": {
+        "tell": 0.6,
+        "pinhole": 0.1,
+        "iris": 0.45,
+        "burp": 0.2,
+        "fall": 0.62,
+        "letter": 1.2,
+        "exit": 0.22,
+        "settle": 2.83,
+        "dilation": 0.35,
+        "portals": 1
+      },
+      "shorter": {
+        "tell": 0.35,
+        "pinhole": 0.08,
+        "iris": 0.32,
+        "burp": 0.16,
+        "fall": 0.62,
+        "letter": 0.85,
+        "exit": 0.2,
+        "settle": 1.92,
+        "dilation": 0.6,
+        "portals": 1
+      },
+      "brief": {
+        "tell": 0.18,
+        "pinhole": 0.06,
+        "iris": 0.22,
+        "burp": 0.12,
+        "fall": 0.62,
+        "letter": 0.5,
+        "exit": 0.16,
+        "settle": 0.98,
+        "dilation": 1.0,
+        "portals": 1
+      },
+      "quick": {
+        "tell": 0.0,
+        "pinhole": 0.04,
+        "iris": 0.14,
+        "burp": 0.1,
+        "fall": 0.42,
+        "letter": 0.36,
+        "exit": 0.12,
+        "settle": 0.5,
+        "dilation": 1.0,
+        "portals": 1
+      },
+      "_escalatedNote": "The reserve. BUILD-PLAN holds one tier above the ladder: two portals at once, a unique line, and it IGNORES the shortening. DECISIONS 2026-08-28 assigns that reserve to tier 6, the Epic epic find, so the ceiling stays big and the shortened common version never reads as a downgrade.",
+      "escalated": {
+        "tell": 0.9,
+        "pinhole": 0.12,
+        "iris": 0.55,
+        "burp": 0.24,
+        "fall": 0.7,
+        "letter": 1.5,
+        "exit": 0.26,
+        "settle": 3.4,
+        "dilation": 0.28,
+        "portals": 2
+      }
+    },
+    "_physicsNote": "Gravity 14 m/s^2, not 9.81. The object has to land with weight, and real gravity at this scale reads as a float. Drift is the horizontal throw out of the portal.",
+    "gravity": 14.0,
+    "_mouthNote": "Diameter of the portal in metres. Read by BOTH the renderer and the siting frame check — they have to agree or siting approves a mouth that then draws off the edge.",
+    "mouthMetres": 3.2,
+    "driftSpeed": 1.5,
+    "tumbleTurns": 2.5,
+    "stepHz": 12,
+    "fallScale": 1.6,
+    "shakeMs": 220,
+    "shakeDegrees": 0.35,
+    "shakeMetres": 0.06,
+    "dustRadius": 3.2,
+    "dustMs": 400,
+    "fleckCount": 21,
+    "smearSegments": 6,
+    "smearDecayMs": 500,
+    "_voNote": "Recorded VO does not exist yet, so these are the LETTERING variants and the synthesised stinger stands in for the voice. Play at random excluding the last 3 used. Exactly one 1-in-25 long line does more for perceived variety than three common ones.",
+    "voLines": [
+      "Epiiiiic FIND!",
+      "Ohhh that's EPIC.",
+      "Sweeeeet az.",
+      "Oh mean!",
+      "Look at THAT!",
+      "Chur!",
+      "Oooof, choice.",
+      "Far OUT."
+    ],
+    "voRareLine": "Nah bro. Nah. That's, that's a good one.",
+    "voRareOneIn": 25,
+    "voEscalatedLine": "Nah that's not even from HERE.",
+    "voExcludeLast": 3
+  },
+  "epicSiting": {
+    "_note": "BUILD-PLAN section 6. Portals are DEFERRED, never cancelled: a failed siting retries and the pity counter freezes, so a suppressed Epic is late and never lost. Completion rate has to be 100%.",
+    "samples": 40,
+    "minDistance": 12,
+    "maxDistance": 22,
+    "bearingDegrees": 50,
+    "relaxedBearingDegrees": 110,
+    "maxSlope": 0.36,
+    "clearance": 4.0,
+    "seaMargin": 0.6,
+    "retrySeconds": 3.0,
+    "_relocationNote": "If the player wanders off, the object blinks to a fresh site ahead of them with a small pop. Fiction: it is following you. Mechanic: you cannot lose it.",
+    "abandonDistance": 60,
+    "maxRelocations": 3,
+    "fallbackDistance": 8,
+    "_bendNote": "The tell: foliage inside this radius leans toward the site before anything is on screen. The player turns to look because the WORLD pointed, not because a UI arrow did. This is the best second in the game.",
+    "_canopyNote": "Siting also refuses a mouth with a tree crown between it and the lens. Found in a rendered frame at the kelpī's estuary: every projection said in-frame and the screenshot showed pōhutukawa canopy where the two mouths were, because line of sight had only ever been tested against the ground and the mouth hangs at crown height. A tree blocks when its trunk is within max(canopyRadius, height*canopyRadiusOfHeight) of the sight line where that line is above height*canopyBandFrom.",
+    "_canopyWidthNote": "0.8 and 2.6 now: the lobes reach 0.64 of the height, and the MOUTH is 3.2m wide, so a sight line that clears the crown by a metre still puts half the mouth in leaf — the frame at the kelpī showed exactly that with the centre pixel green. The clearance is the crown plus the mouth's own radius. Before that, 0.6 and 0.2, not the 0.3 and 0.3 first drafted. The pōhutukawa crown (render/treeGeometry.js) is three lobes reaching 0.64 of the tree's height out from the trunk and starting a fifth of the way up; at 0.3 a crown beside the sight line passed as clear and the granted mouth on seed beta opened green.",
+    "canopyRadius": 2.6,
+    "canopyRadiusOfHeight": 0.8,
+    "canopyBandFrom": 0.2,
+    "_visibleMarginNote": "The loose frame test a granted landing settles for when nothing passes the strict one: the mouth's centre inside this fraction of the frame on both axes, and no crown on the line.",
+    "visibleMargin": 0.85,
+    "bendRadius": 26,
+    "_bendDegreesNote": "18, chosen by looking. At the first value of 9 the lean was invisible in a rendered frame, which makes the tell a no-op; at 40 the forest falls over. 18 reads as a pull.",
+    "bendDegrees": 18
+  },
+  "progression": {
+    "_note": "Rung 5 thresholds, counted over the kete ledger. Two Epics GIVEN to the trinket maker open the doorway; one Epic epic given to her brings Karu. Counted on what she has been handed, never on what the player holds: the mechanism is giving the good stuff away.",
+    "doorwayAt": 2,
+    "karuAt": 1,
+    "recipient": "trinket_maker",
+    "_pityNote": "Once the doorway is open the world leans in: windowStart and hardPity are scaled by this. Measured against the pity table, Epic #2 lands at 6.5-8.5 min and Epic #3 at 11-14 without it, which puts Karu outside a first session. With it the doorway is under 9 min and Karu under 13. The same fiction as the tell.",
+    "afterDoorwayPityMult": 0.7,
+    "_targetsNote": "Minutes. progression.test.js simulates the tick economy against these at ZERO discernment, grabbing everything, walking back to her after each find. Doorway is a p90 target; Karu is every time. The hard-pity worst case for the doorway is a real number (34 ticks + the floor + two walks back, about 9.2 min) and is allowed ceilingSlackMin over the target, no more. If a pity change pushes past these the test fails, which is the point.",
+    "targetDoorwayMin": 9,
+    "ceilingSlackMin": 0.5,
+    "targetKaruMin": 13,
+    "_delayNote": "Milestone lines are QUEUED behind her reaction line and the sighting card, never stacked on top of them. Equal to giving.reactionMs so the queue drains at the reading pace the reaction already sets.",
+    "delayMs": 2600
+  },
+  "cues": {
+    "_note": "How the player dimly notices. No meter, no tutorial, never confirmed. The moths are the discovery vector.",
+    "shimmer": 0.15,
+    "chimes": 0.3,
+    "mothOne": 0.35,
+    "saturation": 0.5,
+    "junkDulls": 0.6,
+    "mothThree": 0.7,
+    "mothSpiral": 0.9
+  },
+  "worlds": {
+    "_note": "Rung 5 section C: the doorway by her, the other world, and the way back. Every distance and every millisecond in the crossing lives here.",
+    "_labelNote": "The other world has no name. Every string says elsewhere; if Lyss names it, that is this one edit. Never Te Rea, never any te reo coined for it.",
+    "worldLabel": {
+      "home": "",
+      "elsewhere": "elsewhere",
+      "elsewhereListen": "elsewhere · listen"
+    },
+    "doorway": {
+      "_offsetNote": "7m from her, on the inland side (higher z), not the 4m first drafted. Giving reach is 3.2m, so the player stands 0.8-3m from a 4m arch every time the give panel is open, and one keyboard overshoot would be an unmarked one-way trip while her line is still on screen.",
+      "offsetMetres": 7,
+      "_holdNote": "Entry is a DWELL, not a key: stand inside triggerRadius for holdMs and the arch takes you. It was a held collect key first, as a deliberate act before a one-way door, and Juniper could not get through it — nobody holds a key at a doorway. The dwell keeps the beat (the arch fills, you can step back out) and with Karu it is 0, so walking straight through is still the legible difference between the rungs.",
+      "triggerRadius": 1.2,
+      "_promptNote": "What the collect key says at the arch. Without Karu it is a hold; with Karu there is no prompt at all, because standing there is the act.",
+      "prompt": "go through",
+      "holdMs": 500,
+      "holdWithKaruMs": 0,
+      "_fadeNote": "Driven per frame from the game clock, never a CSS transition, so the harness can step to the middle of it and photograph the sunset arriving.",
+      "fadeOutMs": 600,
+      "fadeInMs": 600,
+      "archMetres": 2.4,
+      "_arriveNote": "Where you stand on coming home: this far out from the arch on her side, facing her. Past the trigger radius, so the same frame cannot count as standing in it again.",
+      "arriveOffsetMetres": 1.6,
+      "_refusedNote": "A crossing is refused while an Epic is open in this world — the find would be lost with it. The refusal has to have a face: an arch that silently does nothing reads as broken, and in elsewhere it strands the player at the one door they found. Shown once per approach, in the game's voice, until the find is collected.",
+      "refusedLine": "something here is still owed. it is not done with you yet."
+    },
+    "returnDoor": {
+      "_note": "Unmarked, unpointed, off the HUD. 45-85m, not the 70-130m first drafted: the fog closes at 130m and the bush sightline is about 40m, so the wider annulus was ten to fifteen minutes of walking with nothing to steer by, which is a rage-quit and not a cost.",
+      "min": 45,
+      "max": 85,
+      "samples": 48,
+      "clearance": 2.5,
+      "maxWaterDepth": 0.5,
+      "_floorNote": "The soft floor, exactly like Epic relocation: deferred, never cancelled. After lostFloorSec in elsewhere with the door never on screen, it re-sites once to 25-35m ahead of the player's bearing. The cost of being lost is five minutes, not the session.",
+      "lostFloorSec": 300,
+      "maxRelocations": 1,
+      "relocateMin": 25,
+      "relocateMax": 35,
+      "_relocateSpreadNote": "Half-width of the cone ahead of the player's bearing the relocated door is placed in.",
+      "relocateSpreadDeg": 35,
+      "_cueNote": "Close-range only. Inside hearRadius the arch hums (the Epic tell shape, quieter) and the foliage leans at it, so the last 20m is a find and the first 60m is being lost.",
+      "hearRadius": 22,
+      "humGain": 0.35,
+      "_seenNote": "The lost floor disarms once the door has been ON SCREEN, and on screen means inside the frustum AND within the bush sightline: at 85m the arch is a fogged sliver behind trees and counting that as seen would spend the floor on a door the player never noticed.",
+      "seenMetres": 40,
+      "bendRadius": 26,
+      "bendDegrees": 10,
+      "reachRadius": 0.9
+    },
+    "elsewhere": {
+      "_inlandNote": "The whole play window is inland by this much, so the sea never exists there. The shoreline is what the offset moves; the home world has offset 0 and its hash cannot change. 400, not the 200 before or the 80 first drafted: the shoreline noise wanders +-33m, a lost player who has been relocated can be anywhere, and at 200 the shore band was 209m from the entry with an invisible wall over a pit. Every profile term keyed on inland is saturated past 46, so raising it moves no height inside the play window. playWindowMetres is the square the sea must stay out of, and the test holds the shore band beyond it.",
+      "inlandOffset": 400,
+      "playWindowMetres": 300,
+      "_pityNote": "The Epic scheduler RUNS in elsewhere, faster, and the first offer there is authored a Wonder so the place pays within half a minute of arrival. Lost-but-finding is the feeling; lost-and-empty is a chore.",
+      "pityMult": 0.6,
+      "firstOfferTier": 4,
+      "_hintNote": "After this long lost, the wordless chip gains one word, pairing with the hum. Still no marker, no arrow.",
+      "hintAfterSec": 180,
+      "_findsNote": "Tier 5 in elsewhere is hand-placed, never on a weight table (DECISIONS: Epic is not on any weight table). A few of them, in a ring around the entry, so the good stuff is out there whichever way you walk.",
+      "findsMin": 3,
+      "findsMax": 5,
+      "findsRadiusMin": 18,
+      "findsRadiusMax": 60,
+      "_findsPlacementNote": "A hand-placed find is tried findsAttempts times for a spot no deeper than findsMaxWaterDepth (the wade rule) and not too steep before it is simply put down close and straight out.",
+      "findsMaxWaterDepth": 0.5,
+      "findsAttempts": 24,
+      "fogNear": 30,
+      "fogFar": 130,
+      "_entryNote": "The entry is the arch's home position read against elsewhere's terrain, and on the default seed that is a glowing stream 1.6m deep: the player arrived standing in water and the guide led straight across it. If the entry is not walkable the nearest walkable point within entrySearchMetres, on a grid of entrySearchStep, stands in for it.",
+      "entrySearchMetres": 14,
+      "entrySearchStep": 1,
+      "_noEpicNearDoorNote": "A natural Epic never arms while the player is within the door's hearing radius: an Epic out in this world refuses the crossing, and one that lands behind a player who is already at the door strands them there. Owed, not lost — the scheduler simply waits until they walk off.",
+      "noEpicNearDoor": true
+    }
+  }
+}

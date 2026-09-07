@@ -1,0 +1,138 @@
+{
+  "_note": "Where the three cryptids are, how far away you start to feel them, and every number the cryptid rung tunes on. The three ids are the recipient keys in recipients.json. Every site is DERIVED from the terrain for the seed, inside the search window here, so she can move one by editing a window and never by editing code.",
+  "_windowNote": "Windows are small on purpose. At 2.2 m/s with no sprint, 400 m one way is three minutes of walking on a sighting line that gives no distance. Every window here is inside about a three minute round trip from the trinket maker at (5, 27).",
+  "_idNote": "ids are ASCII only; the name field is the spelling, as she wrote it. moana kelpī keeps its macron everywhere it is shown, and anything that asserts on a cryptid's name asserts on `name`, never on the id.",
+  "cryptidArea": {
+    "_note": "radius is where the finds lie and where the fog and the shape are; senseRadius is where the player starts to feel warmer — roughly twice the find radius, so the last stretch is a find and the approach is a feeling, not a marker.",
+    "radius": 22,
+    "senseRadius": 45,
+    "findsPerSite": 2,
+    "findMinFromSite": 4,
+    "findMaxSlope": 0.5
+  },
+  "landing": {
+    "_note": "Where a granted tier 6 lands when portal siting cannot find ground. At the grotto, 'ahead of the player' is the sea. So every site precomputes a dry, walkable point at least this far from the site, and the granted delivery falls back to it instead of to the water. minFromSite is 11, not the 6 first drafted: the player gives from about 2.4m off the site on the landing's side, so a landing 6m out was 3-4m from them and the mouth above it projected off the top of the frame. At 11 it sits where a sited mouth would.",
+    "minFromSite": 11,
+    "maxFromSite": 40,
+  "_clearingNote": "Metres of open ground around each cryptid site: no trees, no scrub; rocks and driftwood stay. The bush is generated twice on the home world — once for siting, which must see the real crowns, then once with these clearings for the world the player walks. 18 reaches the landing ring's inner band, so from the give the sight line to a granted mouth crosses cleared ground.",
+  "clearingMetres": 18,
+  "_maxNote": "40, not 24. At the kelpī's estuary on the default seed every landing inside 24m hangs its mouths in pōhutukawa canopy — the occlusion probe showed five crowns on the sight line from either camera — and the tiers then settle for 'anything', which is a mouth you cannot see. The ring reaches past the estuary's trees; a granted tier 6 thirty metres off is still a walk, not a hunt.",
+    "maxSlope": 0.36,
+    "maxWaterDepth": 0.4,
+    "searchStep": 2,
+    "_dryNote": "The shore rule every dry-ground test in cryptids.js shares: inside shoreBandMetres of the shoreline a point is dry only if it stands dryMarginMetres above the sea. The same two numbers as main.js walkable; they decide where the grotto and every landing may sit.",
+    "shoreBandMetres": 12,
+    "dryMarginMetres": 0.12,
+    "_sightNote": "A landing picked at give time keeps the site itself off the line from the player to the mouth: the rock at the grotto and the lying driftwood are low, but a mouth dead straight past them still opens behind them. Metres of clearance the sight line needs from the site. Small on purpose: the giver stands 2.4m off the site, so anything wider than this forbids the whole front half-plane. The standing driftwood is handled by lying down (render/cryptids.js kelpiiDown), not by this number.",
+    "sightClearMetres": 1.2,
+    "_findClearNote": "A granted tier 6 must not land inside pickup reach of the cryptid's own authored find: on seed beta the Epic landed 1.2m from 'a scale that isn't', the prompt named the find, and E took the tier 5 while the Epic stayed on the ground. Pickup radius is 1.8m; this is that plus a margin.",
+    "findClearMetres": 3.0,
+    "_scoreNote": "How pickLanding ranks the ring around a site for a granted delivery. A candidate starts at how far ahead of the player it is (-1..1), then: inFrame if siting's own strict frame test passes; else visible minus offsetPenalty times how far off centre the mouth would sit; minus distanceTie per metre past minFromSite; minus sightLine if the site itself is on the line from the player. directions is the number of bearings tried per ring.",
+    "score": {
+      "inFrame": 3,
+      "visible": 2,
+      "offsetPenalty": 0.6,
+      "distanceTie": 0.01,
+      "sightLine": 10
+    },
+    "directions": 16
+  },
+  "sight": {
+    "_note": "The chase camera as the kelpī siting sees it, so a site is refused when a tree crown would sit between the lens and the driftwood, or between the lens and the player, from where the player gives. Mirrors main.js: the camera is cameraDistance back from the player at cameraPitchDeg, cameraEyeMetres above the pitch offset; the player gives from giveStandMetres off the site on the landing's side. On seed beta the pōhutukawa crown filled the upper two thirds of the frame during the give and neither the standing driftwood nor the player's head was in it.",
+    "cameraDistance": 9.0,
+    "cameraPitchDeg": 25,
+    "cameraEyeMetres": 1.7,
+    "giveStandMetres": 2.4,
+    "kelpiiCentreMetres": 2.2,
+    "playerHeadMetres": 1.6
+  },
+  "debug": {
+    "_note": "Only the harness's giveTo reads these: how far from a site it stands the player before opening the panel. A fraction of giving.reachMetres for a cryptid; metres for the place, which has no reach, only a radius.",
+    "reachFraction": 0.75,
+    "placeReachMetres": 6
+  },
+  "grant": {
+    "_note": "The cryptid's answer is sequenced, not stacked. The reaction shows alone for lineHoldMs — the shape slips under, the driftwood turns, the fog goes still — THEN the tell starts, so the foliage lean is the answer to the gift. Moths at mothCue during the hold, so something visible happens in those two seconds. A granted delivery must not spend the player's discernment or push the next natural Epic out: it is the cryptid's Epic, not the world's.",
+    "lineHoldMs": 2200,
+    "mothsOnAccept": true,
+    "mothCue": 0.7
+  },
+  "sites": {
+    "grotto_mermaids": {
+      "name": "grotto mermaids",
+      "_note": "'south end, where the rocks go under'. The shoreline (inland 1-6) at negative x, wherever the outcrop field is highest. The rock field is gated to zero at the shore in the height profile, so the grotto is where the rock WOULD be; the visible rocks there are dressing.",
+      "search": {
+        "xMin": -150,
+        "xMax": -50,
+        "inlandMin": 1,
+        "inlandMax": 6
+      },
+      "scanStep": 2,
+      "fallback": {
+        "x": -100,
+        "inland": 3
+      },
+      "_stillNote": "'only if you're already quiet'. No tide system: the pale shape is only ABOVE the water while the player has been still for stillSeconds within stillRadius, and slips under when they move. Giving works regardless; the stillness is for looking.",
+      "stillSeconds": 1.5,
+      "stillRadius": 12,
+      "_shapeNote": "Where the pale shape lies: sideMetres across from the site, then seaward from the site until the ground is depthMetres under the sea, then pastMetres further out. Found per site, not a fixed offset: at a fixed inland+4 the shape on the default seed was 9cm under the sand and the line 'the pale shape is closer than it was' played over a frame with nothing in the water.",
+      "shape": {
+        "sideMetres": -3,
+        "depthMetres": 0.25,
+        "pastMetres": 1.5,
+        "maxScanMetres": 40,
+        "scanStep": 0.5
+      }
+    },
+    "moana_kelpii": {
+      "name": "moana kelpī",
+      "_note": "'come up the estuary'. The estuary mouth: the lowest-inland point at positive x where the stream mask first reaches maskMin. The channel reach only opens past inland 30, so a mask above 0.3 first exists in the forties; searching 30-40 for 0.5 is unsatisfiable and would fall back on every seed.",
+      "search": {
+        "xMin": 40,
+        "xMax": 150,
+        "inlandMin": 42,
+        "inlandMax": 70
+      },
+      "scanStep": 2,
+      "maskMin": 0.3,
+      "_relaxNote": "Streams are sparse: on two seeds in five the tight window has no estuary mouth at all. Relaxed, never cancelled — the second pass widens the window and lowers the mask floor before the fixed fallback, which is a dry spot with no creek and the worst outcome for a thing that is meant to be driftwood at a river mouth.",
+      "relax": {
+        "xMax": 220,
+        "inlandMax": 100,
+        "maskMin": 0.2
+      },
+      "fallback": {
+        "x": 90,
+        "inland": 50
+      },
+      "_standNote": "'they look like driftwood until they don't'. The billboard lies down from senseRadius in and only stands inside standRadius.",
+      "standRadius": 8
+    },
+    "patupaiarehe": {
+      "name": "patupaiarehe",
+      "_note": "'up in the mist on the ridge. don't go looking.' Deep bush, on a local high point. This is a PLACE, not a character: nothing here is drawn as a figure, nothing reacts, and the recipient entry has no reactions. The fog ramps from senseRadius in — that IS her 'cold in patches' line.",
+      "search": {
+        "xMin": -90,
+        "xMax": 90,
+        "inlandMin": 95,
+        "inlandMax": 140
+      },
+      "scanStep": 3,
+      "localMaxRadius": 6,
+      "fallback": {
+        "x": 0,
+        "inland": 110
+      },
+      "fog": {
+        "_note": "Fog colour and near-distance at full warmth. Integration lerps the scene fog toward these by warmth; the render module also drops local fog sprites so the patch reads even before the scene fog moves.",
+        "colour": "#b9c4cc",
+        "near": 8,
+        "far": 34
+      }
+    }
+  },
+  "leftGift": {
+    "_note": "Patupaiarehe are never given to. The player LEAVES a gift on the ground inside the area and walks away. The grant fires only once the player has been at least cryptidArea.radius from the site and then turned back toward it, with no line at all. That distance is the register: you do not hand these beings a thing and wait.",
+    "turnBackDot": 0.2
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "_note": "Who you can give to, and what they say back. Placeholder voice for Lyss to overwrite — every line here is data, so changing one is a JSON edit and not a refactor. Her trinket-maker caption is the source: 'give this character painted shells, shiny bits of metal, pretty rocks. Character will reveal locations where they have spotted grotto mermaids, moana kelpi, and patupaiarehe.'",
+
+  "_cryptidNote": "The cryptids. They are recipients because the giving verb is general, but nothing here SPEAKS: every line is a narrated observation of the scene, no quotes, no first person, so hud.say renders it with no speaker name (speaks: false). Her caption gives them only sightings. Sites are derived in src/worldgen/cryptids.js; the ids here are the keys in data/cryptids.json. grantsAtTier / grantsTier: hand one a tier 5 and it grants a tier 6 through the escalated Epic sequence; anything else gets a line and nothing happens.",
+
+  "recipients": {
+    "trinket_maker": {
+      "name": "the trinket maker",
+      "kind": "maker",
+      "greeting": "kia ora. what have you got there?",
+      "_reactionNote": "Keyed by tier. Junk is accepted warmly and moves nothing: generosity has to cost something or it is not generosity. Tier 4 and up also buy a sighting.",
+      "reactions": {
+        "1": [
+          "she turns it over once and tucks it away. \"chur.\"",
+          "\"oh, a good little one.\" it goes in the tin with the others.",
+          "she nods. the puoro does not stop."
+        ],
+        "2": [
+          "\"now that's a keeper.\" she holds it up to the light.",
+          "she thumbs the edge of it, pleased. \"someone would want this.\"",
+          "\"ka pai.\" it goes somewhere better than the tin."
+        ],
+        "3": [
+          "she stops playing. \"where'd you get this?\"",
+          "\"oh. oh, that's a nice one, e hoa.\" she does not put it down.",
+          "she turns it slowly, the whole way round, and says nothing for a bit."
+        ],
+        "4": [
+          "\"aue.\" she goes quiet. \"you found this? out there?\"",
+          "she laughs, once, delighted, and puts down the puoro to hold it properly.",
+          "\"kei te pai rawa atu.\" she looks at you differently after that."
+        ],
+        "5": [
+          "she does not take it straight away. she looks at it, then at you, then at the ngāhere. \"that's not from here,\" she says. \"you know that, eh.\"",
+          "\"where were you standing when you picked this up.\" it is not a question. she wraps it in cloth before she takes it."
+        ],
+        "6": [
+          "she takes it in both hands and does not look at it. she looks past you, at the ridge."
+        ]
+      },
+      "_tier6Note": "She ACCEPTS a tier 6. The earlier line had her refuse it ('that one's for Karu'), which contradicted the milestone that fires on the same gift while the kete removed the item. The Karu reveal is a milestone line, queued after this one.",
+      "_sightingNote": "Tier 4 and up buy a sighting: she tells you where she has seen one. TELLING ONLY. The cryptids are not built, so nothing is placed in the world and the sighting promises no destination.",
+      "revealsAtTier": 4,
+      "sightings": [
+        {
+          "creature": "grotto mermaids",
+          "site": "grotto_mermaids",
+          "lines": [
+            "\"the grotto mermaids — south end, where the rocks go under. only at low tide, and only if you're already quiet.\"",
+            "\"there's a cave down that way the sea only lets you into twice a month. that's where the grotto mermaids are.\""
+          ]
+        },
+        {
+          "creature": "moana kelpī",
+          "site": "moana_kelpii",
+          "lines": [
+            "\"moana kelpī come up the estuary when it rains hard. they look like driftwood until they don't.\"",
+            "\"saw a moana kelpī standing in the shallows off the point once. stood there an hour. then it wasn't there.\""
+          ]
+        },
+        {
+          "creature": "patupaiarehe",
+          "site": "patupaiarehe",
+          "lines": [
+            "\"patupaiarehe are up in the mist on the ridge. don't go looking. they'll find you if they want to.\"",
+            "\"the bush past the treeline goes cold in patches. that's patupaiarehe. keep walking.\""
+          ]
+        }
+      ],
+      "_milestonesNote": "Fired ONCE each, on the transition, queued behind the reaction line (tuning.progression.delayMs), and remembered in the save so a restored game never replays them. Action and warning only: she never says what Karu is, what the door is, or who made either. That is hers to write.",
+      "milestones": {
+        "doorway": "she puts the puoro down. behind her, where there was bush, there is a way through. \"i wouldn't,\" she says. \"but you will. there's a way back. i've never found it.\"",
+        "karu": "she stands, which she has not done before, and walks past you into the trees. something is waiting there that looks at you."
+      }
+    },
+
+    "wanderer_a": {
+      "name": "a wanderer",
+      "kind": "wanderer",
+      "greeting": "she looks up.",
+      "reactions": {
+        "1": ["\"cheers.\" she pockets it."],
+        "2": ["\"oh, tidy.\" she turns it over."],
+        "3": ["\"you sure? that's a nice one.\" she takes it anyway."],
+        "4": ["she stares at it. \"you should show that to the one with the puoro.\""],
+        "5": ["\"nah. nah, take that to her. that's not for me.\""],
+        "6": ["\"take that to her. right now.\""]
+      },
+      "revealsAtTier": 99,
+      "sightings": []
+    },
+
+    "wanderer_b": {
+      "name": "a wanderer",
+      "kind": "wanderer",
+      "greeting": "he tips his chin at you.",
+      "reactions": {
+        "1": ["\"choice.\""],
+        "2": ["\"oh mean.\" he holds it up."],
+        "3": ["\"far out. where.\""],
+        "4": ["\"bro.\" a long pause. \"bro.\""],
+        "5": ["he does not take it. he takes a step back from it."],
+        "6": ["he does not take it. he takes a step back from you."]
+      },
+      "revealsAtTier": 99,
+      "sightings": []
+    },
+
+
+    "grotto_mermaids": {
+      "name": "grotto mermaids",
+      "kind": "cryptid",
+      "speaks": false,
+      "greeting": "there is a pale shape under the water. it was not there a moment ago.",
+      "_verbNote": "Quieter than the maker's 'give something to'. You do not give to a shape in the water; you hold a thing out and see.",
+      "givePrompt": "hold something out",
+      "giveHead": "hold it out",
+      "_reactionNote": "No arm, no limb, no hair. A shape under the surface and a rock whose shadow is wrong. That is all anyone has seen.",
+      "reactions": {
+        "1": ["the shape does not move. the water moves."],
+        "2": ["the shape does not move. the water moves."],
+        "3": ["the water is very still for a moment."],
+        "4": ["the pale shape turns, maybe. the water is empty."],
+        "5": ["the pale shape is closer than it was. then the water is empty."],
+        "6": ["the water is empty before you have finished holding it out."]
+      },
+      "grantsAtTier": 5,
+      "grantsTier": 6,
+      "revealsAtTier": 99,
+      "sightings": []
+    },
+
+    "moana_kelpii": {
+      "name": "moana kelpī",
+      "_idNote": "id is ASCII only; the name field is the spelling, as she wrote it.",
+      "kind": "cryptid",
+      "speaks": false,
+      "greeting": "driftwood, at the mouth of the creek. it is standing.",
+      "_greetingDownNote": "Said instead of greeting while the driftwood is lying down: after it has taken a gift and until its grant is collected (render/cryptids.js kelpiiDown), and from beyond standRadius. The greeting used to assert it was standing over a frame of it lying.",
+      "greetingDown": "driftwood, at the mouth of the creek. it is lying down.",
+      "givePrompt": "hold something out",
+      "giveHead": "hold it out",
+      "reactions": {
+        "1": ["the driftwood is driftwood."],
+        "2": ["the driftwood is driftwood."],
+        "3": ["the driftwood is not quite where it was."],
+        "4": ["the driftwood turns, slowly, the way driftwood does not."],
+        "5": ["the driftwood is standing. it was not standing. it takes the thing and is driftwood again."],
+        "6": ["the driftwood is lying down. it was lying down the whole time."]
+      },
+      "grantsAtTier": 5,
+      "grantsTier": 6,
+      "revealsAtTier": 99,
+      "sightings": []
+    },
+
+    "patupaiarehe": {
+      "name": "patupaiarehe",
+      "kind": "place",
+      "speaks": false,
+      "_note": "A place, not a character. Her line is 'don't go looking. they'll find you if they want to.' So there is nobody here to hand a thing to and nothing that answers: recipientInReach never returns this id, the reactions object is empty on purpose, and the only feedback anywhere is the fog and the cold. The player may LEAVE a gift on the ground inside the area; the tier 6 comes only after they have walked out of the fog and turned back, with no line at all. Patupaiarehe are treated with real caution in Māori tradition, and a vending-machine framing would be wrong twice over.",
+      "greeting": "",
+      "reactions": {},
+      "_leaveNote": "The verb here is never 'give'. leavePrompt is the HUD line inside the fog with something in the kete; leaveHead is the card's whole heading, verbatim, with no name and no 'give to' in front of it. Both placeholders, both hers to rewrite.",
+      "leavePrompt": "leave something here",
+      "leaveHead": "leave it here",
+      "grantsAtTier": 5,
+      "grantsTier": 6,
+      "revealsAtTier": 99,
+      "sightings": []
+    }
+  }
+}

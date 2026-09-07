@@ -1,0 +1,236 @@
+/*
+ * The title and character select.
+ *
+ * The world is already rendering behind this. The wash is a warm scrim rather
+ * than a solid ground precisely so you can see it — the beach is the best thing
+ * the game has to show, and hiding it behind a splash screen to then reveal it
+ * would be throwing away the one moment it costs nothing to give away.
+ */
+
+#title {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  font-family: ui-rounded, "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink, #2b2118);
+  transition: opacity 480ms ease;
+}
+
+#title.gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Light enough to read the beach through. The first version was a 0.8-alpha
+   wash and it turned the world into a beige fog, which defeats the entire
+   reason for showing the world at all. */
+#title-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 40%,
+      rgba(252, 246, 232, 0.30) 0%,
+      rgba(252, 246, 232, 0.52) 52%,
+      rgba(214, 197, 165, 0.72) 100%);
+  backdrop-filter: blur(1.5px);
+}
+
+/* The HUD belongs to the game, not to the menu. Leaving the kete counter
+   visible under the title had it sitting there reading "0 in your kete" before
+   there was a player. */
+body:has(#title:not(.gone)) #hud,
+body:has(#title:not(.gone)) #help,
+body:has(#title:not(.gone)) #arc-layer {
+  display: none;
+}
+
+#title-main,
+#title-pick {
+  position: relative;
+  text-align: center;
+  padding: 0 24px;
+  max-width: min(94vw, 940px);
+}
+
+/* --- title ---------------------------------------------------------------- */
+
+#title-name {
+  margin: 0;
+  font-size: clamp(52px, 13vw, 132px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  color: #3a2c1e;
+  /* The same -4 degree tilt the Epic lettering uses. It is the game's one
+     typographic signature and it belongs on the title more than anywhere. */
+  transform: rotate(-3deg);
+  text-shadow: 0 3px 0 #c4643f, 0 10px 30px rgba(43, 33, 24, 0.28);
+  animation: titleIn 620ms cubic-bezier(0.18, 1.3, 0.3, 1) both;
+}
+
+#title-sub {
+  margin: 18px 0 0;
+  font-size: clamp(13px, 2.2vw, 17px);
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+  animation: fadeUp 520ms 180ms ease both;
+}
+
+#title-actions {
+  margin-top: 34px;
+  animation: fadeUp 520ms 300ms ease both;
+}
+
+#title-credit {
+  margin: 30px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+  animation: fadeUp 520ms 420ms ease both;
+}
+
+#title-credit span { font-weight: 600; }
+
+/* --- buttons -------------------------------------------------------------- */
+
+#title button {
+  font: 600 clamp(15px, 2.4vw, 19px)/1 inherit;
+  color: #fdf7ea;
+  background: #3a2c1e;
+  border: none;
+  border-radius: 999px;
+  padding: 15px 34px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  box-shadow: 0 6px 18px rgba(43, 33, 24, 0.26);
+  transition: transform 140ms cubic-bezier(0.22, 1.3, 0.36, 1), background 140ms ease;
+}
+
+#title button:hover { transform: translateY(-2px) scale(1.03); background: #4a3826; }
+#title button:active { transform: translateY(0) scale(0.98); }
+#title button:focus-visible { outline: 3px solid #c4643f; outline-offset: 3px; }
+
+#pick-back,
+#title button.secondary {
+  background: transparent !important;
+  color: #3a2c1e !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(43, 33, 24, 0.28) !important;
+}
+
+#title-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* --- character select ----------------------------------------------------- */
+
+#pick-head {
+  margin: 0 0 20px;
+  font-size: clamp(21px, 3.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  transform: rotate(-1.2deg);
+}
+
+#pick-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.pick {
+  flex: 0 0 auto;
+  width: clamp(124px, 20vw, 178px);
+  padding: 10px 10px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(43, 33, 24, 0.14);
+  background: rgba(252, 246, 232, 0.72);
+  cursor: pointer;
+  text-align: center;
+  transition: transform 160ms cubic-bezier(0.22, 1.3, 0.36, 1),
+              background 160ms ease, border-color 160ms ease;
+}
+
+.pick.sel {
+  background: rgba(252, 246, 232, 0.98);
+  border-color: #c4643f;
+  transform: translateY(-6px);
+  box-shadow: 0 12px 26px rgba(43, 33, 24, 0.20);
+}
+
+/* The figures are full-length drawings with a lot of air. Anchoring them to the
+   bottom of a fixed-height box is what makes four different crops line up as a
+   row of people standing on the same ground. */
+.pick-art {
+  height: clamp(140px, 22vh, 210px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.pick-art img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(0 6px 10px rgba(43, 33, 24, 0.18));
+}
+
+.pick b {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.pick i {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.4;
+  opacity: 0.62;
+}
+
+#pick-actions {
+  margin-top: 22px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+#pick-note {
+  margin: 16px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  opacity: 0.45;
+}
+
+@keyframes titleIn {
+  from { opacity: 0; transform: rotate(-8deg) scale(0.86); }
+  to   { opacity: 1; transform: rotate(-3deg) scale(1); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 560px) {
+  .pick i { display: none; }
+  #title-credit { margin-top: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #title-name, #title-sub, #title-actions, #title-credit { animation: none; }
+  #title button:hover, .pick.sel { transform: none; }
+}

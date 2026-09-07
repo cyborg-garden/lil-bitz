@@ -1,0 +1,14 @@
+/* --- crossing worlds ------------------------------------------------------ */
+/* Opacity and colour are written per frame by ui/worldFade.js from the world
+   machine's clock. No transition, no keyframes: an animation that cannot be
+   stepped cannot be photographed at the frame the harness wants. Sits above
+   the HUD and the give panel (z 5) and below the title (title.css). */
+
+#world-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  background: #e8763a;
+}

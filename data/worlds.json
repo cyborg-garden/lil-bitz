@@ -1,0 +1,35 @@
+{
+  "_note": "Per-world dressing. Palettes are data, not code: neither renderer knows there is more than one world. Every colour here MULTIPLIES a vertex colour (MeshLambertMaterial.color over vertexColors), so home is the identity and elsewhere is a shift of the same drawing, not a second set of assets.",
+  "_elsewhereNote": "The sunset is the portal's cutout palette (render/portal.js drawMouth), so the place is visibly the one you have been seeing through the mouth all along. Ground shifted violet, foliage shifted violet-red, the stream water lit from inside. No sea.",
+  "home": {
+    "sky": "#d8cdb4",
+    "fog": "#d8cdb4",
+    "fogNear": 45,
+    "fogFar": 130,
+    "terrainTint": "#ffffff",
+    "foliageTint": "#ffffff",
+    "scrubTint": "#ffffff",
+    "rockTint": "#ffffff",
+    "freshTint": "#ffffff",
+    "freshGlow": "#000000",
+    "hideSea": false,
+    "terrainGlow": "#000000",
+    "foliageGlow": "#000000"
+  },
+  "elsewhere": {
+    "sky": "#e8763a",
+    "fog": "#c9633c",
+    "fogNear": 30,
+    "fogFar": 130,
+    "terrainTint": "#b894cc",
+    "foliageTint": "#b98ac4",
+    "scrubTint": "#c39bcc",
+    "rockTint": "#b9a0c8",
+    "freshTint": "#ffc088",
+    "freshGlow": "#7a3a1a",
+    "hideSea": true,
+    "terrainGlow": "#2a1238",
+    "foliageGlow": "#2c0f2a"
+  },
+  "_glowNote": "terrainGlow / foliageGlow are ADDED (Lambert emissive), because a multiply on green ground can only make brown: the first elsewhere frame was the same forest in a brown filter, and only the rocks read as violet. Home's are black."
+}

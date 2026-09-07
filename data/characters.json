@@ -1,0 +1,27 @@
+{
+  "_note": "The playable roster. Every figure is Lyss's drawing; the ids and the names here are ours and are placeholders.",
+  "_namingNote": "These names are DESCRIPTIVE on purpose — what you can see in the drawing, in the game's own lowercase voice. No invented te reo names, and no invented backstory. Naming her people is hers to do, and a name is much harder to take back than a JSON string. When she names them, this file is the only place that changes.",
+  "default": "player",
+  "roster": [
+    {
+      "id": "player",
+      "name": "the one in the hoodie",
+      "blurb": "walks like nothing is urgent."
+    },
+    {
+      "id": "player_b",
+      "name": "the one in the red top",
+      "blurb": "every pocket already full."
+    },
+    {
+      "id": "player_c",
+      "name": "the one with the hat",
+      "blurb": "visible from a long way off."
+    },
+    {
+      "id": "player_d",
+      "name": "the one in the brown jacket",
+      "blurb": "boots done up properly."
+    }
+  ]
+}
