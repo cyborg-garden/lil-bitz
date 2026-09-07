@@ -1,0 +1,91 @@
+{
+  "trinket_maker": {
+    "png": "art/chars/trinket_maker.png",
+    "w": 185,
+    "h": 460,
+    "worldHeight": 1.95,
+    "role": "npc",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p4-trinket-maker_1.png",
+    "note": "the trinket maker. Lyss's own NPC, holding a puoro."
+  },
+  "player": {
+    "png": "art/chars/player.png",
+    "w": 213,
+    "h": 460,
+    "worldHeight": 1.8,
+    "role": "player",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p3-masc-maoriz_1-1.png",
+    "note": "the original player figure. Kept as the default so the world looks the same as it did."
+  },
+  "player_b": {
+    "png": "art/chars/player_b.png",
+    "w": 178,
+    "h": 460,
+    "worldHeight": 1.78,
+    "role": "player",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p1-femme-maori_3-1.png",
+    "note": "red top, green cargos. The widest silhouette of the four."
+  },
+  "player_c": {
+    "png": "art/chars/player_c.png",
+    "w": 157,
+    "h": 460,
+    "worldHeight": 1.84,
+    "role": "player",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p2-vision-board_1.png",
+    "note": "hat and long coat. Reads instantly at distance, which none of the others do."
+  },
+  "player_d": {
+    "png": "art/chars/player_d.png",
+    "w": 176,
+    "h": 460,
+    "worldHeight": 1.79,
+    "role": "player",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p5-maori-punks_1-1.png",
+    "note": "dark jacket and boots. The compact, low-contrast one."
+  },
+  "wanderer_a": {
+    "png": "art/chars/wanderer_a.png",
+    "w": 265,
+    "h": 460,
+    "worldHeight": 1.85,
+    "role": "npc",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p3-masc-maoriz_3-2.png",
+    "note": "walking, holding a cup. Mid-stride, so he reads as passing through."
+  },
+  "wanderer_b": {
+    "png": "art/chars/wanderer_b.png",
+    "w": 181,
+    "h": 460,
+    "worldHeight": 1.82,
+    "role": "npc",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "p5-maori-punks_2-2.png",
+    "note": "orange, one hand up. From the Maori punks sheet."
+  },
+  "karu": {
+    "png": "art/chars/karu.png",
+    "w": 184,
+    "h": 460,
+    "worldHeight": 2.35,
+    "role": "guide",
+    "pivot": "bottom",
+    "billboard": "y-axis",
+    "source": "karu.png",
+    "unwired": true,
+    "note": "A cutout that arrived in the working tree labelled Karu, from a paper drawing photographed under reference/art-source/. Not confirmed hers, not approved, and NOT rendered: it has a face, and Karu has no body or face until she says. Kept registered so the asset test keeps its PNG honest; nothing reads this entry at runtime."
+  }
+}
