@@ -108,17 +108,34 @@ export function makeAudio() {
     if (ctx) return ctx;
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
+    // iOS Safari files Web Audio as "ambient" by default, which the ring/silent
+    // switch mutes: an iPhone on silent heard nothing at all. "playback" is the
+    // media category, so the game sounds like a video would. Set before the
+    // context exists; a no-op where the API is missing.
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch { /* old WebKit */ }
     ctx = new AC();
     master = ctx.createGain();
     master.gain.value = 0.5;
     master.connect(ctx.destination);
+    // Phones suspend the context behind the game's back (lock screen, app
+    // switch, a call). resume() only works inside a gesture, so every tap and
+    // key re-arms it, and so does coming back to the tab.
+    const rearm = () => { if (ctx.state !== 'running') unlock(); };
+    for (const ev of ['pointerup', 'touchend', 'click', 'keydown']) {
+      window.addEventListener(ev, rearm, { capture: true, passive: true });
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) rearm(); });
     return ctx;
   }
 
-  /** Browsers require a gesture before audio starts. Called on first input. */
+  /**
+   * Browsers require a gesture before audio starts. Called on first input.
+   * Anything but "running" is resumed: iOS parks the context in "interrupted"
+   * after a call or Siri, not "suspended".
+   */
   function unlock() {
     const c = ensure();
-    if (c && c.state === 'suspended') c.resume().catch(() => {});
+    if (c && c.state !== 'running' && c.state !== 'closed') c.resume().catch(() => {});
   }
 
   function blip({ hz, decay, type, gain, when = 0, detune = 0 }) {

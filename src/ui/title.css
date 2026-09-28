@@ -42,7 +42,8 @@
    there was a player. */
 body:has(#title:not(.gone)) #hud,
 body:has(#title:not(.gone)) #help,
-body:has(#title:not(.gone)) #arc-layer {
+body:has(#title:not(.gone)) #arc-layer,
+body:has(#title:not(.gone)) #touch-ui {
   display: none;
 }
 
@@ -228,6 +229,22 @@ body:has(#title:not(.gone)) #arc-layer {
 @media (max-width: 560px) {
   .pick i { display: none; }
   #title-credit { margin-top: 20px; }
+}
+
+/* Short screens (a phone on its side): the picker was taller than the screen,
+   so the buttons hung off the bottom and the note was never seen. Tighter
+   spacing and smaller figures fit it, and the overlay scrolls if it still
+   doesn't. */
+@media (max-height: 520px) {
+  #title { overflow-y: auto; place-items: safe center; }
+  #title-pick { padding: 8px 24px; }
+  #pick-head { margin-bottom: 6px; font-size: 20px; }
+  .pick { padding: 6px 8px 8px; }
+  .pick.sel { transform: none; }
+  .pick-art { height: 30vh; margin-bottom: 4px; }
+  .pick i { display: none; }
+  #pick-actions { margin-top: 10px; }
+  #pick-note { margin-top: 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
