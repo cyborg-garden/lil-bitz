@@ -89,6 +89,8 @@ export function makeAudio() {
   /** @type {AudioBuffer | null} */
   let voiceBuffer = null;
   let voiceRequested = false;
+  /** the clip will never arrive: public builds ship without it */
+  let voiceFailed = false;
   let voiceGain = null;
   /** @type {AudioBufferSourceNode | null} */
   let voiceSource = null;
@@ -191,10 +193,12 @@ export function makeAudio() {
     voiceGain.gain.value = 0;
     voiceGain.connect(master);
     fetch(VOICE_URL)
-      .then((r) => r.arrayBuffer())
+      .then((r) => (r.ok === false ? Promise.reject(new Error(`voice ${r.status}`)) : r.arrayBuffer()))
       .then((b) => c.decodeAudioData(b))
       .then((buf) => { voiceBuffer = buf; })
-      .catch(() => { /* no voice; the game is otherwise unaffected */ });
+      // No voice; the game is otherwise unaffected. Public builds leave the clip
+      // out, and a host may answer its path with an HTML page that won't decode.
+      .catch(() => { voiceFailed = true; });
   }
 
   return {
@@ -254,8 +258,15 @@ export function makeAudio() {
       ensureVoice();
       const c = ensure();
       if (!c || muted) return;
+      // Wait for the decode, but not forever: stop as soon as the clip is known
+      // to be missing, and give up after ~15 s if the load never settles.
+      let tries = 0;
       const play = () => {
-        if (!voiceBuffer) { setTimeout(play, 120); return; }
+        if (!voiceBuffer) {
+          if (voiceFailed || titleSongStopped || ++tries > 125) return;
+          setTimeout(play, 120);
+          return;
+        }
         // The player can start the game before the clip has decoded. Then the
         // song must not begin at all, or it starts under the beach and loops.
         if (titleSongStopped) return;
