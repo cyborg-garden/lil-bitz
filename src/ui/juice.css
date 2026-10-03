@@ -139,6 +139,10 @@
   border-radius: 18px;
   padding: 14px 14px 10px;
   box-shadow: 0 12px 34px rgba(43, 33, 24, 0.26);
+  /* The card itself stays click-through, so a thumb on its lower-left still
+     reaches the touch stick underneath and a flick still moves the
+     selection. Only the rows and the ✕ take taps and clicks (below, and in
+     touch.css): an item tapped is given, the ✕ is done. */
   pointer-events: none;
   font-size: 14px;
 }
@@ -158,6 +162,7 @@
 }
 
 #give-list li {
+  pointer-events: auto;
   display: flex;
   align-items: center;
   gap: 8px;

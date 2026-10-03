@@ -22,6 +22,7 @@ export function makeInput(target = window) {
   let navQueued = 0;
 
   const COLLECT_KEYS = new Set(['KeyE', 'Space', 'Enter']);
+  const MOVE_KEYS = new Set(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyS']);
 
   target.addEventListener('keydown', (e) => {
     if (e.repeat) return;
@@ -37,6 +38,12 @@ export function makeInput(target = window) {
     // menu that scrolls at 60fps is worse.
     if (e.code === 'ArrowUp' || e.code === 'KeyW') navQueued -= 1;
     if (e.code === 'ArrowDown' || e.code === 'KeyS') navQueued += 1;
+    // Claim the move keys. The xbox50 shell dispatches each synthetic key on
+    // the focused element and, if nobody prevented it, again on window; both
+    // reach this listener, so an unclaimed ArrowDown moved the give card two
+    // rows per stick tick. Also stops arrows scrolling the page. `held` is a
+    // Set, so walking never noticed the double.
+    if (MOVE_KEYS.has(e.code)) e.preventDefault();
   });
   target.addEventListener('keyup', (e) => held.delete(e.code));
   target.addEventListener('blur', () => held.clear());

@@ -28,3 +28,30 @@ describe('touch state in makeInput', () => {
     expect(input.takeCancel()).toBe(false);
   });
 });
+
+// The xbox50 shell's sendKey, verbatim in shape: dispatch on the focused
+// element, then again on window unless the first was prevented. A real
+// keyboard sends one event; the shell's pad would send two to an unclaimed key.
+function shellSendKey(win, focused, code) {
+  const init = { bubbles: true, cancelable: true };
+  const ev = new Event('keydown', init);
+  ev.code = code; ev.repeat = false;
+  focused.dispatchEvent(ev);
+  if (!ev.defaultPrevented) {
+    const again = new Event('keydown', init);
+    again.code = code; again.repeat = false;
+    win.dispatchEvent(again);
+  }
+}
+
+describe('menu nav through the xbox50 shell', () => {
+  for (const code of ['ArrowDown', 'ArrowUp', 'KeyW', 'KeyS']) {
+    it(`one ${code} from the pad moves the selection exactly one row`, () => {
+      const win = new EventTarget();
+      const input = makeInput(win);
+      // The focused element bubbles to window; model it as dispatching there.
+      shellSendKey(win, win, code);
+      expect(Math.abs(input.takeNav())).toBe(1);
+    });
+  }
+});
