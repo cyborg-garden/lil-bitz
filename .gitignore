@@ -2,3 +2,6 @@ node_modules/
 dist/
 agent/shots/
 *.log
+# Lyss's recorded material never enters public git (rights unsettled).
+# A local copy here is for listening in `npm run dev` only.
+public/audio/

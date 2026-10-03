@@ -139,7 +139,10 @@
   border-radius: 18px;
   padding: 14px 14px 10px;
   box-shadow: 0 12px 34px rgba(43, 33, 24, 0.26);
-  pointer-events: none;
+  /* Takes taps and clicks: an item tapped is given, the ✕ is done. With
+     "none" here neither ever arrived, so a phone had no way out of the card.
+     Nothing is lost underneath: walking and looking are held while it is up. */
+  pointer-events: auto;
   font-size: 14px;
 }
 

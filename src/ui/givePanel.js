@@ -35,14 +35,15 @@ export function makeGivePanel(root) {
     <div id="give-panel" hidden>
       <div id="give-head"></div>
       <ul id="give-list"></ul>
-      <div id="give-foot"><span class="keys-hint"><span class="key">↑↓</span> choose <span class="key">E</span> give <span class="key">Esc</span> keep them</span><span class="touch-hint">tap an item to give it · ✕ keeps them</span></div>
-      <button id="give-close" type="button" aria-label="keep them">✕</button>
+      <div id="give-foot"></div>
+      <button id="give-close" type="button" aria-label="done, keep the rest">✕</button>
     </div>
   `);
 
   const panel = root.querySelector('#give-panel');
   const head = root.querySelector('#give-head');
   const list = root.querySelector('#give-list');
+  const foot = root.querySelector('#give-foot');
 
   let open = false;
   let pickQueued = false;
@@ -70,7 +71,8 @@ export function makeGivePanel(root) {
   }
 
   // Touch: tapping an item selects it and queues the give in one gesture —
-  // the tap IS the deliberate act the panel exists for. ✕ keeps them.
+  // the tap IS the deliberate act the panel exists for. ✕ is done, and
+  // keeps the rest.
   list.addEventListener('click', (e) => {
     const li = e.target.closest('li[data-i]');
     if (!li || !open) return;
@@ -86,6 +88,13 @@ export function makeGivePanel(root) {
   return {
     get open() { return open; },
     get selected() { return items[cursor] ?? null; },
+
+    /**
+     * How to choose, give and get out, in the words of the hands in use.
+     * Written by ui/surface.js; the panel holds no control words of its own.
+     * @param {string} html
+     */
+    setFoot(html) { foot.innerHTML = html; },
 
     /** Consume a tapped-item give. Edge-triggered, drained like the keys. */
     takePick() {

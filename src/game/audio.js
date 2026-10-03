@@ -64,8 +64,20 @@ const TONE = {
  * gesture the browser will let audio through on), and again in the world on
  * the trinket maker, whose caption puts her "at the edge of the ngāhere,
  * whispering into a puoro" — you hear her before you see who it is.
+ *
+ * Where it is looked for: `audio/lyss-background.mp3` beside the page, on every
+ * surface — the web builds and the xbox50 alike. It is not in this repository
+ * (her recorded material stays out of public git until the rights are
+ * settled), so a deployment cleared to carry it drops the file in that folder
+ * after it builds. Resolved against the page, not this module: the bundle sits
+ * in `assets/`, and a path relative to it pointed at a folder no deployment
+ * has, so she was silent everywhere, the console included.
  */
-const VOICE_URL = new URL('../../public/audio/lyss-background.mp3', import.meta.url).href;
+const VOICE_PATH = 'audio/lyss-background.mp3';
+function voiceUrl() {
+  return new URL(VOICE_PATH, document.baseURI).href;
+}
+
 const VOICE = {
   /** Full volume within this many metres, silent past `far`. */
   near: 6,
@@ -192,7 +204,9 @@ export function makeAudio() {
     voiceGain = c.createGain();
     voiceGain.gain.value = 0;
     voiceGain.connect(master);
-    fetch(VOICE_URL)
+    // Inside the chain, so a page with no usable base URL is just one more
+    // way for the clip to be missing.
+    Promise.resolve().then(() => fetch(voiceUrl()))
       .then((r) => (r.ok === false ? Promise.reject(new Error(`voice ${r.status}`)) : r.arrayBuffer()))
       .then((b) => c.decodeAudioData(b))
       .then((buf) => { voiceBuffer = buf; })

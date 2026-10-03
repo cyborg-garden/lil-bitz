@@ -90,9 +90,11 @@
 #touch-act.give-armed .act-tap { display: none; }
 #touch-act.give-armed .act-hold { display: block; }
 
-/* Give panel on touch: items are tapped, the ✕ keeps them. */
-#give-close { display: none; }
-body.touch-ui-on #give-close {
+/* The give card's ✕: done, keep the rest. Shown to a thumb or a mouse. Not
+   on the xbox50 pad: its cursor click also sends the click key, which would
+   pick up whatever is underfoot as the card closes. The pad's exit is the
+   hold, and the card's foot says so. */
+#give-close {
   display: block;
   position: absolute;
   top: 6px;
@@ -103,7 +105,6 @@ body.touch-ui-on #give-close {
   font: inherit;
   font-size: 20px;
   padding: 4px 8px;
+  cursor: pointer;
 }
-body.touch-ui-on #give-foot .keys-hint { display: none; }
-#give-foot .touch-hint { display: none; }
-body.touch-ui-on #give-foot .touch-hint { display: inline; }
+body.surface-console #give-close { display: none; }

@@ -37,5 +37,8 @@ npx vite build --base ./   # build for pages (relative asset paths)
 Lyss's voice memo. That recording is not in this repository: the rights
 conversation about Lyss's recorded material hasn't happened yet, and until it
 does her voice stays out of public git. The game detects the missing file and
-plays without it. Deployments that are cleared to carry it add the file as an
-overlay at build time.
+plays without it. Deployments that are cleared to carry it put the file at
+`audio/lyss-background.mp3` next to `index.html` after building (the xbox50
+cart does this with its overlay). The path is resolved against the page, so
+the same drop-in works on every surface. For local listening, a copy in
+`public/audio/` is served by `npm run dev` and is gitignored.

@@ -17,6 +17,7 @@ import { makeSceneryMesh } from './render/sceneryMesh.js';
 import { makeHud } from './ui/hud.js';
 import { makeGivePanel } from './ui/givePanel.js';
 import { makeTitleScreen } from './ui/titleScreen.js';
+import { makeSurface } from './ui/surface.js';
 import { makeSaveSlot } from './game/save.js';
 import { rngFor } from './worldgen/rng.js';
 import { makePickupArc } from './ui/pickupArc.js';
@@ -2155,19 +2156,29 @@ window.__lb.ready = true;
 // not a load: it is the overlay coming off something that was always running.
 const help = document.createElement('div');
 help.id = 'help';
-// The xbox50 console serves carts under /cart/ — gamepad hands, gamepad words.
-help.textContent = location.pathname.startsWith('/cart/')
-  ? 'stick to walk · click to pick up · hold click to give'
-  : touchControls.active
-    ? 'left thumb to walk · drag to look · tap ◉ to pick up · hold ◉ to give'
-    : 'WASD to walk · drag to look · E to pick up · G to give';
 help.style.opacity = '0';
 document.body.appendChild(help);
-window.addEventListener('lb-touch-on', () => {
-  if (!location.pathname.startsWith('/cart/')) {
-    help.textContent = 'left thumb to walk · drag to look · tap ◉ to pick up · hold ◉ to give';
-  }
+// Every control word on screen is the surface's: keys on a desktop, thumbs on
+// a phone, the pad on the xbox50 (ui/surface.js). One place, so the help, the
+// chips and the give card can never teach three different grammars again.
+makeSurface({
+  coarse: touchControls.active,
+  onChange(_surface, hints) {
+    help.textContent = hints.help;
+    hud.setKeys({ pick: hints.pickKey, give: hints.giveKey });
+    givePanel.setFoot(hints.panelFoot);
+  },
 });
+
+// While the give card is up, Esc and Backspace mean "done". Caught on the way
+// down, before anything else hears it: the xbox50 shell quits the whole game
+// on Esc, and following the card's own hint must not throw you out of it.
+window.addEventListener('keydown', (e) => {
+  if (!givePanel.open || (e.code !== 'Escape' && e.code !== 'Backspace')) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (!e.repeat) input.queueCancel();
+}, true);
 
 function beginGame(characterId) {
   setPlayerCharacter(characterId);

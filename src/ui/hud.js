@@ -45,8 +45,13 @@ export function makeHud(root) {
   const vignetteEl = root.querySelector('#vignette');
   const worldTagEl = root.querySelector('#world-tag');
   let sayTimer = 0;
+  /** The chips' words, set per surface by ui/surface.js. */
+  let keys = { pick: 'E', give: 'G' };
 
   return {
+    /** @param {{pick: string, give: string}} k */
+    setKeys(k) { keys = k; },
+
     setCount(n) {
       if (nEl.textContent === String(n)) return;
       nEl.textContent = String(n);
@@ -66,7 +71,7 @@ export function makeHud(root) {
       promptEl.hidden = false;
       promptEl.innerHTML =
         `<b style="color:${meta.colour}">${def?.name ?? obj.itemId}</b>` +
-        `<span class="key">E</span>`;
+        `<span class="key">${keys.pick}</span>`;
     },
 
     /**
@@ -81,7 +86,7 @@ export function makeHud(root) {
      * is a dwell now, and a chip saying E at a door you are meant to simply
      * stand in is the lie that kept Juniper outside it.
      */
-    setAction(label, key = 'E') {
+    setAction(label, key = keys.pick) {
       if (!label) {
         promptEl.hidden = true;
         return;
@@ -108,7 +113,7 @@ export function makeHud(root) {
         return;
       }
       giveEl.hidden = false;
-      giveEl.innerHTML = `<b>${text}</b><span class="key">G</span>`;
+      giveEl.innerHTML = `<b>${text}</b><span class="key">${keys.give}</span>`;
     },
 
     /**

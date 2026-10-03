@@ -148,7 +148,13 @@ export function makeTitleScreen(root, {
       e.preventDefault();
       e.stopPropagation();
       start();
-    } else if (e.code === 'Escape') { e.preventDefault(); toTitle(); }
+    } else if (e.code === 'Escape') {
+      // Stopped here too: on the xbox50 the shell quits the game on Esc, and
+      // "back" from the character pick must not mean "out".
+      e.preventDefault();
+      e.stopPropagation();
+      toTitle();
+    }
   };
   window.addEventListener('keydown', onKey, true);
 
