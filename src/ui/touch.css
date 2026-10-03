@@ -106,5 +106,12 @@
   font-size: 20px;
   padding: 4px 8px;
   cursor: pointer;
+  pointer-events: auto;
 }
 body.surface-console #give-close { display: none; }
+/* Same reason for the rows: the pad's cursor dot moves with the stick that
+   chooses, and its click lands on whatever row is under the dot, giving that
+   instead of the highlighted one. On the pad the rows are chosen by stick
+   and given by hold. A real mouse on the console switches the surface to
+   desktop, and clicks work again. */
+body.surface-console #give-list li { pointer-events: none; }
